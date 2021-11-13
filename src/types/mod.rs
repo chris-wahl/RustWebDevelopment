@@ -1,16 +1,17 @@
-use std::io::{ErrorKind};
-use std::str::FromStr;
+use std::{io::ErrorKind, str::FromStr};
 
-#[derive(Debug)]
+use serde::Serialize;
+
+#[derive(Debug, Serialize)]
 pub struct Question {
-    id: QuestionId,
-    title: String,
-    content: String,
-    tags: Option<Vec<String>>,
+    pub(crate) id: QuestionId,
+    pub(crate) title: String,
+    pub(crate) content: String,
+    pub(crate) tags: Option<Vec<String>>,
 }
 
-#[derive(Debug)]
-pub struct QuestionId(String);
+#[derive(Debug, Serialize)]
+pub struct QuestionId(pub(crate) String);
 
 impl Question {
     pub fn new(id: QuestionId, title: String, content: String, tags: Option<Vec<String>>) -> Self {

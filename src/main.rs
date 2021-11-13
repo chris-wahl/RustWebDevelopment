@@ -1,15 +1,24 @@
-use std::str::FromStr;
+use warp::Filter;
+
 use crate::types::{Question, QuestionId};
 
 mod types;
+mod routes;
+
+#[tokio::main]
+async fn main() {
+    let _hello = warp::get()
+        .map(|| format!("Hello, World!"));
+    let get_items = warp::get()
+        .and(warp::path("questions"))
+        .and(warp::path::end())
+        .and_then(routes::get_questions)
+        .recover(routes::return_error);
 
 
-fn main() {
-    let question = Question::new(
-        QuestionId::from_str("1").expect("No id provided"),
-        "First Question".to_string(),
-        "Content of question".to_string(),
-        Some(Vec::from(["faq".to_string()]))
-    );
-    println!["{:?}", question];
+    warp::serve(get_items)
+        .run(([127, 0, 0, 1], 1337))
+        .await;
+
+    println!["Running"];
 }
